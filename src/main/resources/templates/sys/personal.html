@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账单管理系统</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="账单管理系统" />
+    <meta name="description" content="账单管理系统">
+    <meta name="author" content="q-linyu">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/space.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <!-- 加载进度条 -->
+    <link rel="stylesheet" th:href="@{/assets/nprogress/nprogress.css}">
+</head>
+<body>
+<!-- Page Container -->
+<div class="page-container">
+
+    <!-- 左侧导航栏 -->
+    <div th:replace="common/sidebar :: sidebar(activeUrl = 'sys')"></div>
+
+    <!-- Page Content -->
+    <div class="page-content">
+
+        <!-- 头部 -->
+        <div th:replace="common/header :: header"></div>
+
+        <!-- Page Inner -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">管理员信息</h3>
+            </div>
+            <div id="main-wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <div class="form-horizontal" id="personal_build">
+                                    <script type="text/html" id="personals">
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">管理员</label>
+                                            <div class="col-sm-6">
+                                                <p class="form-control-static">{{username}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">登录ip</label>
+                                            <div class="col-sm-6">
+                                                <p class="form-control-static">{{ip}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">登录的时间</label>
+                                            <div class="col-sm-6">
+                                                <p class="form-control-static">{{loginTime}}</p>
+                                            </div>
+                                        </div>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部 -->
+            <div th:replace="common/footer :: footer"></div>
+
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/space.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/art-template/template-web.js}"></script>
+<!-- 加载进度条 -->
+<script type="text/javascript" th:src="@{/assets/nprogress/nprogress.js}"></script>
+<script type="text/javascript" th:src="@{/assets/nprogress/initNprogress.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        loadUserInfo();
+    });
+    // 登录成功后加载用户信息
+    function loadUserInfo() {
+        $.ajax({
+            url: '/getUserInfo',
+            type: 'GET',
+            success : function(res){
+                if (res.status === 200){
+                    var personals = template(`personals`,res.data);
+                    $("#personal_build").append(personals);
+                }
+            },
+            error : function(err){
+                console.log(err);
+            }
+        })
+    }
+</script>
+</body>
+</html>

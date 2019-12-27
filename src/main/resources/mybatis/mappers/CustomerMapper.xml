@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.linyu.bill.core.mapper.CustomerMapper" >
+
+  <sql id="base_Field">
+    id,name,age,gender,email,birthday,address,state,create_time,update_time
+  </sql>
+
+  <!-- 查询全部 -->
+  <select id="selectAll" resultType="priv.linyu.bill.core.entity.po.Customer">
+    SELECT <include refid="base_Field" /> from tbl_customer
+  </select>
+
+  <!-- 查询全部数据 -->
+  <select id="select" resultType="priv.linyu.bill.core.entity.po.Customer">
+    SELECT <include refid="base_Field" /> from tbl_customer
+    <where>
+      1 = 1
+      <if test="name != null and name != ''">
+        and name like concat('%',#{name},'%')
+      </if>
+    </where>
+    <if test="pageHepler.offset != null and pageHepler.limit != null">
+      limit #{pageHepler.offset},#{pageHepler.limit}
+    </if>
+    <if test="pageHepler.offset == null and pageHepler.limit != null">
+      limit #{pageHepler.limit}
+    </if>
+  </select>
+
+
+  <!-- 统计的人数,已激活的人数,未激活的人数 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT count(1) from tbl_customer
+    <where>
+      1 = 1
+      <if test="state != null">
+        and state = #{state}
+      </if>
+      <if test="name != null and name != ''">
+        and name like concat('%',#{name},'%')
+      </if>
+    </where>
+  </select>
+
+  <!-- 根据主键id删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_customer where id = #{id}
+  </delete>
+
+  <!-- 根据主键id查询 -->
+  <select id="selectByPrimaryKey" resultType="priv.linyu.bill.core.entity.po.Customer" parameterType="java.lang.Integer">
+    SELECT <include refid="base_Field" /> from tbl_customer
+    where  id = #{id}
+  </select>
+
+  <!-- 修改 -->
+  <update id="update" parameterType="priv.linyu.bill.core.entity.po.Customer">
+    UPDATE tbl_customer
+    SET
+    age=#{age},
+    gender=#{gender},
+    email=#{email},
+    birthday=#{birthday},
+    address=#{address},
+    state=#{state},
+    update_time= NOW()
+    WHERE id = #{id}
+  </update>
+
+  <!-- 新增 -->
+  <insert id="add">
+    INSERT into tbl_customer(name,age,gender,email,birthday,address,state,create_time,update_time)
+    VALUES(#{name},#{age},#{gender},#{email},#{birthday},#{address},#{state},NOW(),null)
+  </insert>
+
+  <!-- 校验客户名是否被注册 -->
+  <select id="checkByname" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) from tbl_customer where  name = #{name}
+  </select>
+
+
+  <!-- 根据每月获取对应的记录数 -->
+  <select id="echearts" resultType="java.lang.Integer">
+    SELECT count(1) from tbl_customer
+    where create_time like concat(#{dataStr},'%')
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.linyu.bill.core.mapper.ProviderMapper" >
+
+  <sql id="Base_Column_List" >
+    pid,provider_code,providerName,people,phone,address,fax,`describe`,create_time,update_time
+  </sql>
+
+  <!-- 查询全部 -->
+  <select id="selectAll" resultType="priv.linyu.bill.core.entity.po.Provider">
+    select <include refid="Base_Column_List" /> from tbl_provider
+  </select>
+
+  <!-- 查询全部数据 -->
+  <select id="select" resultType="priv.linyu.bill.core.entity.po.Provider">
+    SELECT <include refid="Base_Column_List" /> from tbl_provider
+    <where>
+      1 = 1
+      <if test="providerName != null and providerName != ''">
+        and providerName like concat('%',#{providerName},'%')
+      </if>
+    </where>
+    <if test="pageHepler.offset != null and pageHepler.limit != null">
+      limit #{pageHepler.offset},#{pageHepler.limit}
+    </if>
+    <if test="pageHepler.offset == null and pageHepler.limit != null">
+      limit #{pageHepler.limit}
+    </if>
+  </select>
+
+  <!-- 统计的人数,已激活的人数,未激活的人数 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT count(1) from tbl_provider
+    <where>
+      1 = 1
+      <if test="providerName != null and providerName != ''">
+        and providerName like concat('%',#{providerName},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" resultType="priv.linyu.bill.core.entity.po.Provider" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_provider
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_provider
+    where pid = #{pid,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="priv.linyu.bill.core.entity.po.Provider" >
+    insert into tbl_provider (pid, provider_code, providerName, 
+      people, phone, address, 
+      fax, `describe`, create_time
+      )
+    values (#{pid,jdbcType=INTEGER}, #{providerCode,jdbcType=VARCHAR}, #{providerName,jdbcType=VARCHAR},
+      #{people,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{fax,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, NOW()
+      )
+  </insert>
+
+
+  <update id="update" parameterType="priv.linyu.bill.core.entity.po.Provider" >
+    update tbl_provider
+    set
+      providerName = #{providerName,jdbcType=VARCHAR},
+      people = #{people,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      fax = #{fax,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      update_time = NOW()
+    where pid = #{pid,jdbcType=INTEGER}
+  </update>
+
+</mapper>

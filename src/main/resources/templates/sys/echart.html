@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账单管理系统</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="账单管理系统"/>
+    <meta name="description" content="账单管理系统">
+    <meta name="author" content="q-linyu">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/assets/googleapis/fonts.googleapis.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/uniform/css/default.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/switchery/switchery.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/space.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <!-- 加载进度条 -->
+    <link rel="stylesheet" th:href="@{/assets/nprogress/nprogress.css}">
+</head>
+<body>
+<!-- Page Container -->
+<div class="page-container">
+
+    <!-- 左侧导航栏 -->
+    <div th:replace="common/sidebar :: sidebar(activeUrl = 'sys')"></div>
+
+    <!-- Page Content -->
+    <div class="page-content">
+
+        <!-- 头部 -->
+        <div th:replace="common/header :: header"></div>
+
+        <!-- Page Inner -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">统计分析</h3>
+            </div>
+            <div id="main-wrapper">
+                <!-- 统计分析 start -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-white stats-widget">
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <span class="stats-number" id="regCount"></span>
+                                    <p class="stats-info">客户注册次数</p>
+                                </div>
+                                <div class="pull-right">
+                                    <i class="fa fa-long-arrow-up" aria-hidden="true"
+                                       style="font-size: 35px;color: #63cb89;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-white stats-widget">
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <span class="stats-number" id="activeCount"></span>
+                                    <p class="stats-info">已激活人数</p>
+                                </div>
+                                <div class="pull-right">
+                                    <i class="fa fa-long-arrow-up" aria-hidden="true"
+                                       style="font-size: 35px;color: #63cb89;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-white stats-widget">
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <span class="stats-number" id="noActiveCount"></span>
+                                    <p class="stats-info">未激活人数</p>
+                                </div>
+                                <div class="pull-right">
+                                    <i class="fa fa-long-arrow-down" aria-hidden="true"
+                                       style="font-size: 35px;color: #ec5e99;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-white stats-widget">
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <span class="stats-number" id="loginCount"></span>
+                                    <p class="stats-info">管理员登录次数</p>
+                                </div>
+                                <div class="pull-right">
+                                    <i class="fa fa-long-arrow-up" aria-hidden="true"
+                                       style="font-size: 35px;color: #63cb89;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 统计分析 end -->
+
+
+                <div class="row">
+                    <!-- 图形列表 start -->
+                    <div class="col-md-12 col-lg-8">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <div class="panel-heading clearfix">
+                                    <h4 class="panel-title">
+                                        <i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;&nbsp;
+                                        图形列表
+                                    </h4>
+                                </div>
+                                <div id="userEchart" style="width: 100vh; height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 图形列表 end -->
+
+                    <!-- 饼图 start -->
+                    <div class="col-md-122 col-lg-4">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <div class="panel-heading clearfix">
+                                    <h4 class="panel-title">
+                                        <i class="fa fa-pie-chart" aria-hidden="true"></i>&nbsp;&nbsp;
+                                        饼图列表
+                                    </h4>
+                                </div>
+                                <div id="is-active" style=" height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 饼图 end -->
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <div th:replace="common/footer :: footer"></div>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/uniform/js/jquery.uniform.standalone.js}"></script>
+<script type="text/javascript" th:src="@{/js/space.min.js}"></script>
+<!-- 加载进度条 -->
+<script type="text/javascript" th:src="@{/assets/nprogress/nprogress.js}"></script>
+<script type="text/javascript" th:src="@{/assets/nprogress/initNprogress.js}"></script>
+<!-- 饼图 -->
+<script type="text/javascript" th:src="@{/assets/echarts/echarts.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        // 加载
+        loadechart();
+    });
+
+
+    // 统计分析
+    function loadechart(){
+        $.ajax({
+            url: '/echearts',
+            type: 'GET',
+            success : function(res){
+                if (res.status === 200){
+                    // 加载数据
+                    $("#regCount").text(res.data.regCount);
+                    $("#activeCount").text(res.data.activeCount);
+                    $("#noActiveCount").text(res.data.noActiveCount);
+                    $("#loginCount").text(res.data.loginCount);
+
+                    // 加载饼图
+                    var isActive=echarts.init(document.getElementById("is-active"));
+
+                    var isOption = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b}: {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'left',
+                            data:['未激活','已激活']
+                        },
+                        series: [
+                            {
+                                name: "访问",
+                                type:'pie',
+                                radius: ['50%', '70%'],
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: '30',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: false
+                                    }
+                                },
+                                data:[
+                                    {value:res.data.noActiveCount, name:'未激活'},
+                                    {value:res.data.activeCount, name:'已激活'},
+                                ]
+                            }
+                        ]
+                    };
+
+                    isActive.setOption(isOption);
+
+
+                    // 加载图形列表
+                    var userEchart=echarts.init(document.getElementById("userEchart"));
+
+                    var option = {
+                        color: ['#3398DB'],
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : res.data.months,
+                                axisTick: {
+                                    alignWithLabel: true
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'注册的人数',
+                                type:'bar',
+                                barWidth: '60%',
+                                data:res.data.everyCount
+                            }
+                        ]
+                    };
+
+                    userEchart.setOption(option);
+
+                }
+            },
+            error : function(err){
+                console.log(err);
+            }
+        })
+    }
+</script>
+</body>
+</html>

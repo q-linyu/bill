@@ -1,0 +1,93 @@
+server:
+  port: 8001
+  # 重要配置
+  tomcat:
+    max-connections: 0
+    max-http-post-size: 0
+    max-threads: 0
+    max-swallow-size: 0
+    uri-encoding: utf-8
+  # mvn clean
+  # mvn package -Dmaven.test.skip=true
+
+spring:
+  datasource:
+    # 如果存在多个数据源，监控的时候可以通过名字来区分开来
+    name: mysql
+    # 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接数据库的url
+    url: jdbc:mysql://localhost:3306/db_bill?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    # 连接数据库的账号
+    username: root
+    # 连接数据库的密码
+    password: root
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 扩展插件
+    # 监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
+    filters: stat
+    # 最大连接池数量
+    maxActive: 20
+    # 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
+    initialSize: 1
+    # 获取连接时最大等待时间，单位毫秒
+    maxWait: 60000
+    # 最小连接池数量
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    # 连接保持空闲而不被驱逐的最长时间
+    minEvictableIdleTimeMillis: 300000
+    # 用来检测连接是否有效的sql，要求是一个查询语句
+    # 如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用
+    validationQuery: select count(1) from 'table'
+    # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+    testWhileIdle: true
+    # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+    testOnBorrow: false
+    # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+    testOnReturn: false
+    # 是否缓存preparedStatement，即PSCache
+    poolPreparedStatements: false
+    # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true
+    maxOpenPreparedStatements: -1
+
+    # Redis数据源
+  redis:
+    host: 192.168.223.130
+    port: 6379
+    timeout: 6000
+    password:
+    jedis:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+
+  thymeleaf:
+    #是否开启缓存，开发时建议为false，默认为true
+    cache: false
+    #检查模板是否存在，默认为true
+    check-template: true
+    #检查模板位置是否存在，默认为true
+    check-template-location: true
+    #编码
+    encoding: UTF-8
+    #模板文件位置
+    prefix: classpath:/templates/
+    #content-type配置
+    servlet:
+      content-type: text/html
+    #后缀
+    suffix: .html
+
+# 配置mybatis
+mybatis:
+  mapper-locations: classpath:mybatis/mappers/*.xml        #映射配置文件路径
+  config-location: classpath:mybatis/mybatis-config.xml   #核心配置文件路径
+
+# 日志目录
+logging:
+  path: I:/logs/
+  file: ${logging.path}bill

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账单管理系统</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="账单管理系统" />
+    <meta name="description" content="账单管理系统">
+    <meta name="author" content="q-linyu">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/assets/googleapis/fonts.googleapis.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/jquery-growl/jquery.growl.css}" >
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/uniform/css/default.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/switchery/switchery.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/space.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <!-- 加载进度条 -->
+    <link rel="stylesheet" th:href="@{/assets/nprogress/nprogress.css}">
+    <style type="text/css">
+        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+            margin-top: -5px;
+        }
+
+        .error{
+            color: #ff0e1b;
+        }
+    </style>
+</head>
+<body>
+<!-- Page Container -->
+<div class="page-container">
+
+    <!-- 左侧导航栏 -->
+    <div th:replace="common/sidebar :: sidebar(activeUrl = 'bill')"></div>
+
+    <!-- Page Content -->
+    <div class="page-content">
+
+        <!-- 头部 -->
+        <div th:replace="common/header :: header"></div>
+
+        <!-- Page Inner -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">添加账单</h3>
+            </div>
+            <div id="main-wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <form class="form-horizontal" id="addForm" method="post">
+                                    <div class="form-group">
+                                        <label for="billCode" class="col-sm-3 control-label">账单编码</label>
+                                        <div class="col-sm-5">
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="billCode"
+                                                    id="billCode"
+                                                    placeholder="请输入账单编码"
+                                                    onfocus="inputfocus(this)"
+                                                    onblur="inputBlur(this)"
+                                            >
+                                            <p class="help-block error"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="billCode" class="col-sm-3 control-label">账单名称</label>
+                                        <div class="col-sm-5">
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="billName"
+                                                    id="billName"
+                                                    placeholder="请输入账单名称"
+                                                    onfocus="inputfocus(this)"
+                                                    onblur="inputBlur(this)"
+                                            >
+                                            <p class="help-block error"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="billCom" class="col-sm-3 control-label">续费</label>
+                                        <div class="col-sm-5">
+                                            <select id="billCom" name="billCom" class="form-control" onclick="selectClick()">
+                                                <option value="1">年</option>
+                                                <option value="2">月</option>
+                                                <option value="3">日</option>
+                                                <option value="4">小时</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="billNum" class="col-sm-3 control-label">数量</label>
+                                        <div class="col-sm-5">
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="billNum"
+                                                    id="billNum"
+                                                    onfocus="inputfocus(this)"
+                                                    onblur="inputBlur(this)"
+                                                    placeholder="请输入数量"
+                                            >
+                                            <p class="help-block error"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="billNum" class="col-sm-3 control-label">金额</label>
+                                        <div class="col-sm-5">
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="money"
+                                                    id="money"
+                                                    onfocus="inputfocus(this)"
+                                                    onblur="inputBlur(this)"
+                                                    placeholder="请输入金额"
+                                            >
+                                            <p class="help-block error"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="billNum" class="col-sm-3 control-label">是否付款</label>
+                                        <div class="col-sm-5">
+                                            <select id="pay" name="pay" class="form-control" onclick="selectClick()">
+                                                <option value="0">未付款</option>
+                                                <option value="1">已付款</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-5">
+                                            <button
+                                                    type="submit"
+                                                    class="btn btn-primary btn-sm btn-block"
+                                                    style="margin-top:30px;margin-bottom:-14px;"
+                                                    onclick="addHandler();return false;"
+                                            >保 存
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部 -->
+            <div th:replace="common/footer :: footer"></div>
+
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-growl/jquery.growl.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/uniform/js/jquery.uniform.standalone.js}"></script>
+<script type="text/javascript" th:src="@{/js/space.min.js}"></script>
+<!-- 加载进度条 -->
+<script type="text/javascript" th:src="@{/assets/nprogress/nprogress.js}"></script>
+<script type="text/javascript" th:src="@{/assets/nprogress/initNprogress.js}"></script>
+<script type="text/javascript">
+
+    // 选中
+    function selectClick() {
+        $("#age option:selected").attr("selected",true).siblings('option').attr("selected",false);
+    }
+
+    // 表单验证
+    function checkValid(dom) {
+
+        // 默认为false
+        var bool = true;
+
+        var id = $(dom).attr("id");
+        var val = $(dom).val();
+
+        switch (id) {
+            case "billCode":
+                if ("" === val){
+                    $("#billCode").next("p").html("账单编码不能为空").parent().parent().addClass("has-error");
+                    bool = false;
+                }else {
+                    $("#billCode").next("p").html("").parent().parent().addClass("has-success").removeClass("has-error");
+                }
+                break;
+            case "billName":
+                if ("" === val){
+                    $("#billName").next("p").html("账单名称不能为空").parent().parent().addClass("has-error").removeClass("has-success");
+                    bool = false;
+                }else {
+                    $("#billName").next("p").html("").parent().parent().addClass("has-success").removeClass("has-error");
+                }
+                break;
+            case "billNum":
+                if ("" === val){
+                    $("#billNum").next("p").html("数量不能为空").parent().parent().addClass("has-error");
+                    bool = false;
+                }else {
+                    $("#billNum").next("p").html("").parent().parent().addClass("has-success");
+                }
+                break;
+            case "money":
+                if ("" === val){
+                    $("#money").next("p").html("金额不能为空").parent().parent().addClass("has-error");
+                    bool = false;
+                }else {
+                    $("#money").next("p").html("").parent().parent().addClass("has-success");
+                }
+                break;
+            default:
+                bool = false;
+                break;
+        }
+
+        return bool;
+    }
+
+    // 获取焦点
+    function inputfocus(dom) {
+        $(dom).next("p").html("").removeClass("error").parent().parent().removeClass("has-error has-success");
+    }
+
+    // 失去焦点
+    function inputBlur(dom) {
+        checkValid(dom);
+    }
+
+
+    // 新增
+    function addHandler() {
+        var bool = true;
+
+        // 表达验证
+        $("#addForm input[id]:not([type='radio'])").each(function (i,e) {
+            if (checkValid(e) === false){
+                bool = false;
+            }
+        });
+
+        if (bool){
+            console.log($("#addForm").serialize());
+            // 发送ajax
+            $.ajax({
+                url: '/bill/add',
+                type: 'POST',
+                data: $("#addForm").serialize(),
+                dataType: 'JSON',
+                success : function(res){
+                    if (res.status === 201){
+                        $.growl.notice({
+                            title: "温馨提示",
+                            message: res.msg
+                        });
+                        // 数据清空
+                        $("#billCode").val('');
+                        $("#billName").val('');
+                        $("#billCom option[value='0']").attr("selected",true).siblings().attr('selected',false);
+                        $("#billNum").val('');
+                        $("#money").val('');
+                        $("#pay option[value='0']").attr("selected",true).siblings().attr('selected',false);
+                        // 样式清空
+                        $(".form-group").removeClass("has-success").find('p').removeClass('error').html('');
+                    }else {
+                        $.growl.error({
+                            title: "温馨提示",
+                            message: res.msg
+                        });
+                    }
+                },
+                error : function(err){
+                    console.error(err);
+                }
+            });
+        }
+        return bool;
+
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+.login {
+	width: 100%;
+	height: 100%;
+	background-color: #1F2A40;
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.login .login_wrap {
+	width: 400px;
+	height: 250px;
+}
+
+.login .login_wrap .title {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	font-size: 22px;
+	text-align: center;
+	background-color: #1F2A40;
+	color: #fff;
+}
+
+.login .login_wrap .form-wrap {
+	width: 100%;
+	height: 200px;
+	padding: 20px 60px;
+
+}
+
+.login .login_wrap .form-wrap .input-group {
+	margin-top: 10px;
+}
+
+.login .login_wrap .form-wrap button {
+	margin-top: 20px;
+}

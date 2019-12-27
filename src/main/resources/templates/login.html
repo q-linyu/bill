@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账单管理系统</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="账单管理系统" />
+    <meta name="description" content="账单管理系统">
+    <meta name="author" content="q-linyu">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/jquery-growl/jquery.growl.css}" >
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+</head>
+<body>
+<div class="login">
+    <div class="login_wrap">
+        <div class="title">
+            <span>账单管理系统</span>
+        </div>
+        <form id="loginForm"  class="form-wrap" action="#" method="post" data-parsley-validate>
+            <div class="input-group">
+				<span class="input-group-addon">
+				    <i class="glyphicon glyphicon-user"></i>
+				</span>
+                <input type="text" name="username" class="form-control" placeholder="请输入用户名" />
+            </div>
+            <div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-lock"></i>
+				</span>
+                <input type="password" name="password" class="form-control" placeholder="请输入密码" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" onclick="submitHandler(); return false">登 录</button>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-growl/jquery.growl.js}"></script>
+<script type="text/javascript">
+    // 登录
+    function submitHandler() {
+        // 校验用户名是否为空
+        var username = $("#username").val();
+        if (username === null) {
+            $.growl.error({
+                title: "温馨提示",
+                message: "用户名不能为空"
+            });
+            return;
+        }
+
+        // 校验密码是否为空
+        var password = $("#password").val();
+        if (password === null) {
+            $.growl.error({
+                title: "温馨提示",
+                message: "密码不能为空"
+            });
+            return;
+        }
+
+        // 发送异步请求
+        $.ajax({
+            url: '/login',
+            type: "POST",
+            data: $('#loginForm').serialize(),
+            dataType: "json",
+            global: false,
+            success: function (res) {
+                if (res.status === 200) {
+                    window.location.href = "/home.html";
+                } else {
+                    $.growl.error({
+                        title: "温馨提示",
+                        message: res.msg
+                    });
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+</script>
+</body>
+</html>

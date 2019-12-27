@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="page-sidebar" th:fragment="sidebar">
+    <a class="logo-box" th:href="@{/home.html}" style="color: #fff !important;">
+        <span>账单管理系统</span>
+        <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+        <i class="icon-close" id="sidebar-toggle-button-close"></i>
+    </a>
+    <div class="page-sidebar-inner">
+        <div class="page-sidebar-menu">
+            <ul class="accordion-menu">
+                <li>
+                    <a th:href="@{/home.html}">
+                        <i class="menu-icon icon-home4"></i>
+                        <span>首页</span>
+                    </a>
+                </li>
+                <li th:class="${activeUrl == 'customer' ? 'active-page': ''}">
+                    <a href="javascript:void(0);">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp;&nbsp;
+                        <span>客户管理</span>
+                        <i class="accordion-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/customer/list.html}">客户列表</a></li>
+                        <li><a th:href="@{/customer/add.html}">添加客户</a></li>
+                    </ul>
+                </li>
+                <li th:class="${activeUrl == 'provider' ? 'active-page': ''}">
+                    <a href="javascript:void(0);">
+                        <i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;&nbsp;
+                        <span>供应商管理</span>
+                        <i class="accordion-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/provider/list.html}">供应商列表</a></li>
+                        <li><a th:href="@{/provider/add.html}">添加供应商</a></li>
+                    </ul>
+                </li>
+                <li th:class="${activeUrl == 'bill' ? 'active-page': ''}">
+                    <a href="javascript:void(0);">
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;&nbsp;
+                        <span>账单管理</span>
+                        <i class="accordion-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/bill/list.html}">账单列表</a></li>
+                        <li><a th:href="@{/bill/add.html}">添加账单</a></li>
+                    </ul>
+                </li>
+                <li th:class="${activeUrl == 'sys' ? 'active-page': ''}">
+                    <a href="javascript:void(0);">
+                        <i class="fa fa-cog" aria-hidden="true"></i>&nbsp;&nbsp;
+                        <span>系统管理</span>
+                        <i class="accordion-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/home.html}">统计分析</a></li>
+                        <li><a th:href="@{/logs.html}">日志列表</a></li>
+                        <li><a th:href="@{/password.html}">修改密码</a></li>
+                        <li><a th:href="@{/personal.html}">管理员信息</a></li>
+                    </ul>
+                </li>
+                <li class="menu-divider"></li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <span>系统版本</span>
+                        <span class="label label-danger">1.0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</html>

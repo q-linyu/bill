@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.linyu.bill.core.mapper.UserMapper" >
+
+  <sql id="Base_Column_List" >
+    user_id,username,password,salt,is_lock
+  </sql>
+
+  <!-- 根据账户名查询单个系统账户对象 -->
+  <select id="selectBySysName" resultType="priv.linyu.bill.core.entity.po.UserInfo">
+    select <include refid="Base_Column_List" /> from sys_user where username = #{username}
+  </select>
+
+  <!-- 校验原密码是否存在 -->
+  <select id="checkBypassword" resultType="java.lang.Integer">
+    select count(1) from sys_user where user_id = #{userId} and `password` = #{oldpassword}
+  </select>
+
+  <!-- 修改密码 -->
+  <update id="updatePassword">
+    UPDATE sys_user
+    set `password` = #{newpassword}
+    where user_id = #{userId}
+  </update>
+
+
+
+
+</mapper>

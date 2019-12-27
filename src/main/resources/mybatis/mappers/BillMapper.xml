@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.linyu.bill.core.mapper.BillMapper" >
+
+  <sql id="Base_Column_List" >
+    bid, bill_code, bill_name, bill_com, bill_num, money, pay, create_time,update_time
+  </sql>
+
+  <!-- 查询全部 -->
+  <select id="selectAll" resultType="priv.linyu.bill.core.entity.po.Bill">
+    select <include refid="Base_Column_List" /> from tbl_bill
+  </select>
+
+  <!-- 是否付款 -->
+  <select id="isPay" resultType="java.lang.Integer">
+    select count(1) from tbl_bill where pay =#{pay}
+  </select>
+
+  <!-- 查询全部数据 -->
+  <select id="select" resultType="priv.linyu.bill.core.entity.po.Bill">
+    SELECT <include refid="Base_Column_List" /> from tbl_bill
+    <where>
+      1 = 1
+      <if test="billName != null and billName != ''">
+        and bill_name like concat('%',#{billName},'%')
+      </if>
+    </where>
+    <if test="pageHepler.offset != null and pageHepler.limit != null">
+      limit #{pageHepler.offset},#{pageHepler.limit}
+    </if>
+    <if test="pageHepler.offset == null and pageHepler.limit != null">
+      limit #{pageHepler.limit}
+    </if>
+  </select>
+
+  <!-- 统计的人数,已激活的人数,未激活的人数 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT count(1) from tbl_bill
+    <where>
+      1 = 1
+      <if test="billName != null and billName != ''">
+        and bill_name like concat('%',#{billName},'%')
+      </if>
+    </where>
+  </select>
+
+  <!-- 根据主键id查询 -->
+  <select id="selectByPrimaryKey" resultType="priv.linyu.bill.core.entity.po.Bill" parameterType="java.lang.Integer">
+    SELECT <include refid="Base_Column_List" /> from tbl_bill
+    where  bid = #{bid}
+  </select>
+
+  <!-- 根据主键id删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_bill
+    where bid = #{bid,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 新增 -->
+  <insert id="insert" parameterType="priv.linyu.bill.core.entity.po.Bill" >
+    insert into tbl_bill (bid, bill_code, bill_name, 
+      bill_com, bill_num, money, 
+      pay, create_time
+      )
+    values (#{bid,jdbcType=INTEGER}, #{billCode,jdbcType=VARCHAR}, #{billName,jdbcType=VARCHAR}, 
+      #{billCom,jdbcType=INTEGER}, #{billNum,jdbcType=INTEGER}, #{money,jdbcType=DOUBLE},
+      #{pay,jdbcType=INTEGER}, NOW()
+      )
+  </insert>
+
+
+  <update id="update" parameterType="priv.linyu.bill.core.entity.po.Bill" >
+    update tbl_bill
+    set
+      bill_name = #{billName,jdbcType=VARCHAR},
+      bill_com = #{billCom,jdbcType=INTEGER},
+      bill_num = #{billNum,jdbcType=INTEGER},
+      money = #{money,jdbcType=DOUBLE},
+      pay = #{pay,jdbcType=INTEGER},
+      update_time = NOW()
+    where bid = #{bid,jdbcType=INTEGER}
+  </update>
+</mapper>

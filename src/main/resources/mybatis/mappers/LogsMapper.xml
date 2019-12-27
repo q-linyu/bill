@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.linyu.bill.core.mapper.LogsMapper">
+
+    <resultMap id="ResultMap" type="priv.linyu.bill.core.entity.po.Logs">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <association property="userInfo" javaType="priv.linyu.bill.core.entity.po.UserInfo">
+            <result column="username" property="username"/>
+        </association>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="priv.linyu.bill.core.entity.po.Logs">
+        insert into tbl_logs(user_id,content,create_time)
+        values(#{userId},#{content},NOW())
+    </insert>
+
+    <!-- 查询 -->
+    <select id="select" resultMap="ResultMap">
+        select l.id,l.content,l.create_time,u.username
+        from tbl_logs as l,sys_user as u
+        where u.user_id = l.user_id
+        ORDER BY l.id desc
+        <if test="pageHepler.offset != null and pageHepler.limit != null">
+            limit #{pageHepler.offset},#{pageHepler.limit}
+        </if>
+        <if test="pageHepler.offset == null and pageHepler.limit != null">
+            limit #{pageHepler.limit}
+        </if>
+
+    </select>
+
+</mapper>

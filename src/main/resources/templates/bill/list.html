@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>账单管理系统</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="账单管理系统" />
+    <meta name="description" content="账单管理系统">
+    <meta name="author" content="q-linyu">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- 加载动漫 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/loading.css}">
+    <link rel="stylesheet" th:href="@{/assets/googleapis/fonts.googleapis.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/jquery-growl/jquery.growl.css}" >
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <!-- 模态框 -->
+    <link rel="stylesheet" th:href="@{/assets/modals/modals.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/uniform/css/default.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/switchery/switchery.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/bootstrap-table/bootstrap-table.css}">
+    <!-- 加载进度条 -->
+    <link rel="stylesheet" th:href="@{/assets/nprogress/nprogress.css}">
+    <!-- 日期控件 -->
+    <link rel="stylesheet" th:href="@{/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/space.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/customer.css}">
+    <style>
+
+        .bs-checkbox  input[type=checkbox] {
+            margin-right: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 15px;
+            height: 12px;
+            position: relative;
+        }
+
+        .bs-checkbox  input[type=checkbox]:after {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            top: 0;
+            content: " ";
+            color: #fff;
+            display: inline-block;
+            visibility: visible;
+            padding: 0 3px;
+            border-radius: 3px;
+            background:#FFFFFF;
+            border:1px solid #DDDDDD;
+        }
+
+        .bs-checkbox  input[type=checkbox]:checked:after {
+            content: "✓";
+            font-size: 12px;
+            font-weight:600;
+            background-color: #63CB89;
+        }
+
+        .form-group label{
+            float: left;
+        }
+
+        .form-group div{
+            float: left;
+        }
+
+        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+            margin-top: -5px;
+        }
+    </style>
+</head>
+<body>
+<!-- Page Container -->
+<div class="page-container">
+
+    <!-- 左侧导航栏 -->
+    <div th:replace="common/sidebar :: sidebar(activeUrl = 'bill')"></div>
+
+
+    <div class="page-content">
+
+        <!-- 头部 -->
+        <div th:replace="common/header :: header"></div>
+
+        <!-- 内容 -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">账单列表</h3>
+            </div>
+            <div id="main-wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <div id="toolbar">
+                                        <div style="float: left;margin-right: 5px;">
+                                            <input type="text" class="form-control" name="billName" id="search" placeholder="请输入账单名称">
+                                        </div>
+                                        <button class="btn btn-primary" style="float: left;margin-right: 5px;" onclick="searchHandler();">
+                                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;
+                                            搜 索
+                                        </button>
+                                        <a th:href="@{/bill/export}" class="btn btn-success" style="float: left;">
+                                            <i class="fa fa-cloud-download" aria-hidden="true"></i>&nbsp;&nbsp;
+                                            导 出
+                                        </a>
+                                    </div>
+                                    <table id="datatable" class="display table table-striped table-hover">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- 底部 -->
+            <div th:replace="common/footer :: footer"></div>
+        </div>
+    </div>
+
+    <!-- 删除模态框 -->
+    <div id="deleteModals" class="modal" data-easein="slideDownIn" tabindex="-1" role="dialog"
+         aria-labelledby="costumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="delete_id">
+                    确定要删除吗?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm" onclick="deleteHandler()">
+                        确定
+                    </button>
+                    <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 修改模态框 -->
+    <div id="updateModals" class="modal" data-easein="slideDownIn" tabindex="-1" role="dialog"
+         aria-labelledby="costumModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑账单信息</h4>
+                </div>
+                <div class="modal-body" style="margin-left: 30px;">
+                    <form class="form-horizontal" id="updateForm">
+                        <input type="hidden" id="update_id">
+                        <!-- 客户名 -->
+                        <div class="form-group">
+                            <label class="control-label">编&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static" id="billCode"></p>
+                            </div>
+                        </div>
+                        <!-- 账单名称 -->
+                        <div class="form-group">
+                            <label for="billName"  class="control-label">名&nbsp;&nbsp;&nbsp;&nbsp;称：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="billName" id="billName">
+                            </div>
+                        </div>
+                        <!-- 续费 -->
+                        <div class="form-group form-group-sm">
+                            <label>续&nbsp;&nbsp;&nbsp;&nbsp;费：</label>
+                            <div class="col-sm-10">
+                                <select id="billCom" name="billCom" class="form-control" onclick="selectClick()">
+                                    <option value="0">年</option>
+                                    <option value="1">月</option>
+                                    <option value="2">日</option>
+                                    <option value="3">时</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- 账单数量 -->
+                        <div class="form-group">
+                            <label for="billName"  class="control-label">数&nbsp;&nbsp;&nbsp;&nbsp;量：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="billNum" id="billNum">
+                            </div>
+                        </div>
+                        <!-- 金额 -->
+                        <div class="form-group">
+                            <label for="billName"  class="control-label">金&nbsp;&nbsp;&nbsp;&nbsp;额：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="money" id="money">
+                            </div>
+                        </div>
+                        <!-- 是否付款 -->
+                        <div class="form-group form-group-sm">
+                            <label>付&nbsp;&nbsp;&nbsp;&nbsp;款：</label>
+                            <div class="col-sm-10">
+                                <select id="pay" name="pay" class="form-control" onclick="selectClick()">
+                                    <option value="0">未付款</option>
+                                    <option value="1">已付款</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm" onclick="updateHandler()">
+                        保存
+                    </button>
+                    <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-growl/jquery.growl.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<!-- 模态框 -->
+<script type="text/javascript" th:src="@{/assets/modals/velocity.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/modals/velocity.ui.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/modals/utils.js}"></script>
+<script type="text/javascript" th:src="@{/assets/uniform/js/jquery.uniform.standalone.js}"></script>
+<script type="text/javascript" th:src="@{/assets/switchery/switchery.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/bootstrap-table/bootstrap-table.js}"></script>
+<script type="text/javascript" th:src="@{/assets/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+<!-- 加载进度条 -->
+<script type="text/javascript" th:src="@{/assets/nprogress/nprogress.js}"></script>
+<script type="text/javascript" th:src="@{/assets/nprogress/initNprogress.js}"></script>
+<!-- 日期控件 -->
+<script th:src="@{/assets/moment/moment-with-locales.min.js}"></script>
+<script th:src="@{/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/space.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/initTable.js}"></script>
+<script type="text/javascript">
+
+    // 定义表头
+    var columns = [
+        { checkbox: true },
+        { field: 'bid',title: '序号' },
+        { field: 'billCode',title: '账单编号' },
+        { field: 'billName',title: '账单名称' },
+        { field: 'billCom',title: '续费时限',formatter : function(value,row,index) {
+            if (value === 0){
+                return "年";
+            }else if (value === 1){
+                return "月";
+            }else if (value === 2){
+                return "日";
+            }else if (value === 3){
+                return "时";
+            }
+        }},
+        { field: 'billNum',title: '账单数量' },
+        { field: 'money',title: '金额' },
+        { field: 'pay',title: '是否付款',formatter : function(value, row, index) {
+                return value === 1 ? '<span class="label label-success">已付款</span>':'<span class="label label-danger">未付款</span>';
+            }},
+        { field: 'createTime',title: '创建时间' },
+        { field: 'updateTime',title: '修改时间' },
+        { field: 'bid',title: '操作',align: 'center',formatter: function (value, row, index){
+                var opt = "";
+                opt += "<button type='button' class='btn btn-primary btn-sm' onclick='updateClick("+value+")'><i class='fa fa-pencil-square-o' aria-hidden='true'></i>&nbsp;&nbsp;修改</button>&nbsp;&nbsp;";
+                opt += "<button type='button' class='btn btn-danger btn-sm' onclick='deleteClick("+value+")'><i class='fa fa-trash-o' aria-hidden='true'></i>&nbsp;&nbsp;删除</button>";
+                return opt;
+            }},
+    ];
+
+    $(function () {
+        // 初始化数据
+        initTable("/bill/page",columns);
+    });
+
+    // 搜索
+    function searchHandler() {
+        var name = $("#search").val();
+        var url = "/bill/page?billName=" + name;
+        // 初始化数据
+        initTable(url,columns);
+    }
+
+    // 删除按钮
+    function deleteClick(id){
+        //获取当前选择行id
+        var selectedRows = $("#datatable").bootstrapTable('getSelections');
+        if (selectedRows <= 0){
+            $.growl.error({
+                title: "温馨提示",
+                message: "请选择要删除的数据"
+            });
+            return;
+        }
+
+        if (selectedRows.length > 1){
+            $.growl.error({
+                title: "温馨提示",
+                message: "一次只能选择一行删除"
+            });
+            return;
+        }
+        $("#deleteModals").modal('toggle');
+        $("#delete_id").val(id);
+    }
+
+    // 确定要删除
+    function deleteHandler() {
+        var delete_id = $("#delete_id").val();
+        $.ajax({
+            url: '/bill/' + delete_id,
+            type: 'DELETE',
+            success: function (res) {
+                if (res.status === 206){
+                    $.growl.notice({
+                        title: "温馨提示",
+                        message: res.msg
+                    });
+                    // 关闭模态框
+                    $("#deleteModals").modal('hide');
+                    // 刷新
+                    $("#datatable").bootstrapTable('refresh');
+                }
+            },
+            error : function(err) {
+                console.log(err);
+            }
+        });
+    }
+
+    // 点击修改按钮
+    function updateClick(id) {
+        //获取当前选择行id
+        var selectedRows = $("#datatable").bootstrapTable('getSelections');
+        if (selectedRows <= 0){
+            $.growl.error({
+                title: "温馨提示",
+                message: "请选择要修改的数据"
+            });
+            return;
+        }
+
+        if (selectedRows.length > 1){
+            $.growl.error({
+                title: "温馨提示",
+                message: "一次只能选择一行删除"
+            });
+            return;
+        }
+
+        $("#updateModals").modal('toggle');
+
+        $.ajax({
+            url: '/bill',
+            type: 'GET',
+            data : {
+                "bid": id,
+            },
+            dataType: 'json',
+            success : function(res) {
+                if (res.status === 200){
+                    // 数据回显
+                    $("#billCode").text(res.data.billCode);
+                    $("#billName").val(res.data.billName);
+                    $("#billCom").val(res.data.billCom).find("option[value='"+res.data.billCom+"']").attr("selected",true).siblings().attr('selected',false);
+                    $("#billNum").val(res.data.billNum);
+                    $("#money").val(res.data.money);
+                    $("#pay").val(res.data.pay).find("option[value='"+res.data.pay+"']").attr("selected",true).siblings().attr('selected',false);
+                }
+            }
+        });
+        // 把id存起来
+        $("#update_id").val(id);
+    }
+
+    // 选中
+    function selectClick() {
+        $("#billCom option:selected").attr("selected",true).siblings('option').attr("selected",false);
+    }
+
+
+    // 执行修改操作
+    function updateHandler() {
+        // 操作数据库
+        $.ajax({
+            url: '/bill/update',
+            type: 'PUT',
+            data : {
+                "billName": $("#billName").val(),
+                "billCom": $("#billCom").val(),
+                "billNum": $("#billNum").val(),
+                "money": $("#money").val(),
+                "pay": $("#pay").val(),
+                "bid": $("#update_id").val()
+            },
+            dataType: 'json',
+            success : function(res) {
+                if (res.status === 204){
+                    $.growl.notice({
+                        title: "温馨提示",
+                        message: res.msg
+                    });
+                    // 关闭模态框
+                    $("#updateModals").modal('hide');
+                    // 刷新
+                    $("#datatable").bootstrapTable('refresh');
+                }
+            },
+            error : function(err) {
+                console.log(err);
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>
