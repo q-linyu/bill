@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_bill
 -- ------------------------------------------------------
--- Server version	8.0.17
+-- Server version	5.7.32-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,15 +21,15 @@
 
 DROP TABLE IF EXISTS `sys_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sys_user` (
   `user_id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '系统账户',
-  `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '系统密码',
+  `username` varchar(50) DEFAULT NULL COMMENT '系统账户',
+  `password` varchar(200) DEFAULT NULL COMMENT '系统密码',
   `salt` varchar(255) DEFAULT NULL COMMENT '盐值',
   `is_lock` int(255) DEFAULT NULL COMMENT '状态:1正常  0禁用',
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tbl_bill`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_bill` (
   `bid` int(10) NOT NULL AUTO_INCREMENT,
   `bill_code` varchar(25) DEFAULT NULL,
@@ -79,20 +79,20 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tbl_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `name` varchar(50) DEFAULT NULL COMMENT '客户名',
   `age` int(11) DEFAULT NULL COMMENT '年龄',
   `gender` int(2) DEFAULT NULL COMMENT '性别，1：男  0：女',
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱',
+  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
   `birthday` date DEFAULT NULL COMMENT '出生日期',
   `address` varchar(255) DEFAULT NULL COMMENT '地址',
   `state` int(2) DEFAULT NULL COMMENT '状态，1：已激活  0：未激活',
   `create_time` date DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(6) DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,14 +111,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tbl_logs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_logs` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `user_id` int(2) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `tbl_logs` (
 
 LOCK TABLES `tbl_logs` WRITE;
 /*!40000 ALTER TABLE `tbl_logs` DISABLE KEYS */;
-INSERT INTO `tbl_logs` VALUES (1,1,'登录','2019-12-27 14:24:10'),(2,1,'登录','2019-12-27 14:32:40'),(3,1,'登录','2019-12-27 14:34:09'),(4,1,'修改密码成功','2019-12-27 14:34:19'),(5,1,'修改密码成功','2019-12-27 14:34:37'),(6,1,'登录','2019-12-27 14:38:40'),(7,1,'新增客户成功','2019-12-27 14:39:04'),(8,1,'修改客户成功','2019-12-27 14:39:26'),(9,1,'修改客户成功','2019-12-27 14:39:34'),(10,1,'删除客户成功','2019-12-27 14:39:36'),(11,1,'新增账单成功','2019-12-27 14:40:19'),(12,1,'修改账单成功','2019-12-27 14:43:32'),(13,1,'修改账单成功','2019-12-27 14:43:35'),(14,1,'导出账单成功','2019-12-27 14:43:39'),(15,1,'导出供应商信息成功','2019-12-27 14:43:54'),(16,1,'修改供应商成功','2019-12-27 14:44:12'),(17,1,'修改账单成功','2019-12-27 14:44:31'),(18,1,'登录','2019-12-27 14:56:23'),(19,1,'登录','2019-12-27 17:00:36'),(20,1,'修改客户成功','2019-12-27 17:06:12'),(21,1,'修改客户成功','2019-12-27 17:06:26'),(22,1,'修改客户成功','2019-12-27 17:06:32'),(23,1,'修改客户成功','2019-12-27 17:20:04'),(24,1,'修改客户成功','2019-12-27 17:21:43'),(25,1,'修改客户成功','2019-12-27 17:21:55'),(26,1,'登录','2019-12-27 18:18:52');
+INSERT INTO `tbl_logs` VALUES (1,1,'登录','2019-12-27 14:24:10'),(2,1,'登录','2019-12-27 14:32:40'),(3,1,'登录','2019-12-27 14:34:09'),(4,1,'修改密码成功','2019-12-27 14:34:19'),(5,1,'修改密码成功','2019-12-27 14:34:37'),(6,1,'登录','2019-12-27 14:38:40'),(7,1,'新增客户成功','2019-12-27 14:39:04'),(8,1,'修改客户成功','2019-12-27 14:39:26'),(9,1,'修改客户成功','2019-12-27 14:39:34'),(10,1,'删除客户成功','2019-12-27 14:39:36'),(11,1,'新增账单成功','2019-12-27 14:40:19'),(12,1,'修改账单成功','2019-12-27 14:43:32'),(13,1,'修改账单成功','2019-12-27 14:43:35'),(14,1,'导出账单成功','2019-12-27 14:43:39'),(15,1,'导出供应商信息成功','2019-12-27 14:43:54'),(16,1,'修改供应商成功','2019-12-27 14:44:12'),(17,1,'修改账单成功','2019-12-27 14:44:31'),(18,1,'登录','2019-12-27 14:56:23'),(19,1,'登录','2019-12-27 17:00:36'),(20,1,'修改客户成功','2019-12-27 17:06:12'),(21,1,'修改客户成功','2019-12-27 17:06:26'),(22,1,'修改客户成功','2019-12-27 17:06:32'),(23,1,'修改客户成功','2019-12-27 17:20:04'),(24,1,'修改客户成功','2019-12-27 17:21:43'),(25,1,'修改客户成功','2019-12-27 17:21:55'),(26,1,'登录','2019-12-27 18:18:52'),(27,1,'登录','2020-12-10 01:01:18');
 /*!40000 ALTER TABLE `tbl_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +137,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tbl_provider`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_provider` (
   `pid` int(10) NOT NULL AUTO_INCREMENT,
   `provider_code` varchar(25) DEFAULT NULL,
@@ -172,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-27 18:44:03
+-- Dump completed on 2020-12-10  1:11:42

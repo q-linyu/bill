@@ -26,9 +26,26 @@ boot、mybatis、redis、mysql、thymeleaf、jquery、bootstrap、druid、shiro�
 ### 部署
 
 ```shell
-git clone SSH
+git clone git@github.com:q-linyu/bill.git
 
 # 启动，账户：admin，密码：admin
 localhost:8001/login.html
 ```
 
+### 效果图
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/login.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/home.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/user-list.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/user-add.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/provider-list.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/provider-add.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/logs.png)
+
+![](https://project-commons-images.oss-cn-shenzhen.aliyuncs.com/bill/password.png)
